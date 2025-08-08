@@ -1,13 +1,11 @@
 require_relative "maker/version"
-require_relative "maker/engine" if defined?(Rails)
+require_relative "maker/admin"
+require_relative "maker/engine"
+require_relative "maker/admin_engine"
 
 module Decidim
   module Theme
     module Maker
-      # Public: Returns the version of the module.
-      def self.version
-        VERSION
-      end
     end
   end
 end

@@ -4,9 +4,16 @@ module Decidim
   module Admin
     class Permissions < Decidim::DefaultPermissions
       def permissions
-        return permission_action unless user
-        return permission_action unless user.admin?
+        # Load the default Decidim permissions first (e.g. admin dashboard access)
+        super
+
         return permission_action unless permission_action.scope == :admin
+
+        # Ensure admin users can access the admin dashboard
+        if permission_action.subject == :admin_dashboard && permission_action.action == :read
+          allow! if user&.admin?
+          return permission_action
+        end
 
         case permission_action.subject
         when :theme_file
@@ -20,4 +27,4 @@ module Decidim
       end
     end
   end
-end 
+end

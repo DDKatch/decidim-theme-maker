@@ -1,0 +1,11 @@
+<div class="row column">
+  <%= form.translated :text_field, :name, autofocus: true %>
+</div>
+
+<div class="row column">
+  <%= form.translated :text_area, :description, rows: 3 %>
+</div>
+
+<div class="row column">
+  <%= form.upload :file, label: t("models.theme_file.fields.file", scope: "decidim.admin") %>
+</div> 

@@ -4,12 +4,12 @@ module Decidim
   module Admin
     class Permissions < Decidim::DefaultPermissions
       def permissions
-        # Load the default Decidim permissions first (e.g. admin dashboard access)
+        # Always run Decidim defaults first so core admin permissions and menu visibility work
         super
 
         return permission_action unless permission_action.scope == :admin
 
-        # Ensure admin users can access the admin dashboard
+        # Ensure admin dashboard permission is decided to avoid PermissionNotSetError
         if permission_action.subject == :admin_dashboard && permission_action.action == :read
           allow! if user&.admin?
           return permission_action
@@ -27,4 +27,4 @@ module Decidim
       end
     end
   end
-end
+end 

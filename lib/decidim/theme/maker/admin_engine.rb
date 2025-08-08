@@ -13,13 +13,13 @@ module Decidim
 
         routes do
           constraints(->(request) { Decidim::Admin::OrganizationDashboardConstraint.new(request).matches? }) do
-            resources :theme_maker, only: [:index, :new, :create, :edit, :update, :destroy], controller: "decidim/admin/theme_maker"
+            resources :theme_maker, path: "", only: [:index, :new, :create, :edit, :update, :destroy], controller: "decidim/admin/theme_maker"
           end
         end
 
         initializer "decidim_theme_maker.mount_routes" do
           Decidim::Core::Engine.routes do
-            mount Decidim::Theme::Maker::AdminEngine, at: "/admin", as: "decidim_admin_theme_maker"
+            mount Decidim::Theme::Maker::AdminEngine, at: "/admin/theme_maker", as: "decidim_admin_theme_maker"
           end
         end
 
@@ -27,12 +27,12 @@ module Decidim
           Decidim::Theme::Maker::Menu.register_admin_menu_modules!
         end
 
-        initializer "decidim_theme_maker.icons" do
+        initializer "decidim_theme_maker.register_icons" do
           Decidim.icons.register(
-            name: "paint-brush",
-            icon: "paint-brush",
+            name: "paint-brush-line",
+            icon: "paint-brush-line",
             category: "system",
-            description: "Theme Maker",
+            description: "",
             engine: :theme_maker
           )
         end

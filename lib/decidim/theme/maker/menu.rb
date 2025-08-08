@@ -9,7 +9,7 @@ module Decidim
             menu.add_item :theme_maker,
                           I18n.t("menu.theme_maker", scope: "decidim.theme_maker"),
                           "/admin/theme_maker",
-                          icon_name: "paint-brush",
+                          icon_name: "paint-brush-line",
                           position: 7.5,
                           active: :inclusive
           end

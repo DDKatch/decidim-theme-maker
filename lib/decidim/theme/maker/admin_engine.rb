@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "rails"
+require "active_support/all"
+require "decidim/core"
+
 require_relative "menu"
 
 module Decidim
@@ -11,23 +15,30 @@ module Decidim
         paths["db/migrate"] = nil
         paths["lib/tasks"] = nil
 
+        route_constraint = ->(request) do
+          Decidim::Admin::OrganizationDashboardConstraint.new(request).matches?
+        end
+
         routes do
-          constraints(->(request) { Decidim::Admin::OrganizationDashboardConstraint.new(request).matches? }) do
-            resources :theme_maker, path: "", only: [:index, :new, :create, :edit, :update, :destroy], controller: "decidim/admin/theme_maker"
+          constraints(route_constraint) do
+            resources(
+              :theme_maker,
+              only: [:index, :new, :create, :edit, :update, :destroy],
+            )
           end
         end
 
-        initializer "decidim_theme_maker.mount_routes" do
+        initializer "decidim_theme_maker_admin.mount_routes" do
           Decidim::Core::Engine.routes do
-            mount Decidim::Theme::Maker::AdminEngine, at: "/admin/theme_maker", as: "decidim_admin_theme_maker"
+            mount(
+              Decidim::Theme::Maker::AdminEngine,
+              at: "/admin",
+              as: "decidim_admin_theme_maker"
+            )
           end
         end
 
-        initializer "decidim_theme_maker.admin_menu" do
-          Decidim::Theme::Maker::Menu.register_admin_menu_modules!
-        end
-
-        initializer "decidim_theme_maker.register_icons" do
+        initializer "decidim_theme_maker_admin.register_icons" do
           Decidim.icons.register(
             name: "paint-brush-line",
             icon: "paint-brush-line",
@@ -35,6 +46,10 @@ module Decidim
             description: "",
             engine: :theme_maker
           )
+        end
+
+        initializer "decidim_theme_maker_admin.menu" do
+          Decidim::Theme::Maker::Menu.register_admin_menu_modules!
         end
       end
     end

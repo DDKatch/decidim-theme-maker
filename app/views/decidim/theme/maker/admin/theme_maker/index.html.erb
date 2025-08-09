@@ -6,7 +6,7 @@
   <div class="card-divider">
     <h2 class="card-title">
       <%= t("title", scope: "decidim.admin.theme_maker") %>
-      <%= link_to t("actions.new", scope: "decidim.admin.theme_maker"), new_decidim_admin_theme_maker_path, class: "button tiny button--title" %>
+      <%= link_to t("actions.new", scope: "decidim.admin.theme_maker"), new_theme_maker_path, class: "button tiny button--title" %>
     </h2>
   </div>
 
@@ -43,9 +43,9 @@
                   <%= l theme_file.created_at, format: :long %>
                 </td>
                 <td class="table-list__actions">
-                  <%= icon_link_to "pencil", t("actions.edit", scope: "decidim.admin"), edit_decidim_admin_theme_maker_path(theme_file), class: "action-icon--edit" %>
+                  <%= icon_link_to "pencil", t("actions.edit", scope: "decidim.admin"), edit_theme_maker_path(theme_file), class: "action-icon--edit" %>
                   <%= icon_link_to "eye", t("actions.preview", scope: "decidim.admin"), rails_blob_path(theme_file.file, disposition: :inline), class: "action-icon--preview", target: "_blank" %>
-                  <%= icon_link_to "trash", t("actions.destroy", scope: "decidim.admin"), decidim_admin_theme_maker_path(theme_file), method: :delete, class: "action-icon--remove", data: { confirm: t("actions.confirm_destroy", scope: "decidim.admin") } %>
+                  <%= icon_link_to "trash", t("actions.destroy", scope: "decidim.admin"), theme_maker_path(theme_file), method: :delete, class: "action-icon--remove", data: { confirm: t("actions.confirm_destroy", scope: "decidim.admin") } %>
                 </td>
               </tr>
             <% end %>
@@ -58,4 +58,4 @@
       </p>
     <% end %>
   </div>
-</div> 
+</div>

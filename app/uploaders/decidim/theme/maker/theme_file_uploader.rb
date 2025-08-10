@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module Decidim
+module Decidim::Theme::Maker
   # This class deals with uploading CSS files for themes
-  class ThemeFileUploader < ApplicationUploader
+  class ThemeFileUploader < Decidim::ApplicationUploader
     def validable_dimensions
       false
     end
@@ -29,4 +29,4 @@ module Decidim
       :admin
     end
   end
-end 
+end

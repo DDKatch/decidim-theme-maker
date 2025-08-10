@@ -11,7 +11,7 @@ module Decidim
         belongs_to :organization, class_name: "Decidim::Organization"
 
         has_one_attached :file
-        validates_upload :file, uploader: Decidim::ThemeFileUploader
+        validates_upload :file, uploader: Decidim::Theme::Maker::ThemeFileUploader
 
         validates :name, presence: true
         validates :description, presence: true
@@ -48,4 +48,4 @@ module Decidim
       end
     end
   end
-end 
+end

@@ -10,7 +10,10 @@ module Decidim::Theme::Maker::Admin
     def index
       puts "\n\n Decidim::Theme::Maker::Admin::ThemeMakerController <:index> \n\n"
       # enforce_permission_to :read, :theme_file
-      @theme_files = current_organization.theme_files.order(created_at: :desc)
+      #
+      @theme_files = Decidim::Theme::Maker::ThemeFile
+        .where(decidim_organization_id: current_organization.id)
+        .order(created_at: :desc)
     end
 
     def new

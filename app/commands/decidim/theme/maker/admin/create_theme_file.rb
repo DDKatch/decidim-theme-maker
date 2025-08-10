@@ -31,7 +31,6 @@ module Decidim::Theme::Maker::Admin
           broadcast(:ok, theme_file)
         end
       else
-        binding.irb
         form.errors.merge!(theme_file.errors)
         broadcast(:invalid)
       end
@@ -43,7 +42,7 @@ module Decidim::Theme::Maker::Admin
 
     def build_theme_file
       Decidim::Theme::Maker::ThemeFile.new(
-        organization: organization,
+        organization: @organization,
         name: form.name,
         description: form.description,
         file: form.file

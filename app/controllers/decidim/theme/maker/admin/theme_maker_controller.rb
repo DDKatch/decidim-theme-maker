@@ -3,7 +3,9 @@
 module Decidim::Theme::Maker::Admin
   # Controller that allows managing theme files for the organization.
   class ThemeMakerController < ApplicationController
+    # TODO add permission everywhere
     # include ::Decidim::NeedsPermission
+    helper Decidim::Theme::Maker::ApplicationHelper
 
     add_breadcrumb_item_from_menu :admin_settings_menu
 
@@ -12,7 +14,7 @@ module Decidim::Theme::Maker::Admin
       # enforce_permission_to :read, :theme_file
       #
       @theme_files = Decidim::Theme::Maker::ThemeFile
-        .where(decidim_organization_id: current_organization.id)
+        .where(organization: current_organization)
         .order(created_at: :desc)
     end
 
@@ -28,7 +30,7 @@ module Decidim::Theme::Maker::Admin
       CreateThemeFile.call(@form, current_user, current_organization) do
         on(:ok) do
           flash[:notice] = I18n.t("theme_maker.create.success", scope: "decidim.admin")
-          redirect_to decidim_admin_theme_maker_index_path
+          redirect_to theme_maker_index_path
         end
 
         on(:invalid) do
@@ -44,13 +46,13 @@ module Decidim::Theme::Maker::Admin
     end
 
     def update
-      enforce_permission_to :update, :theme_file, theme_file: theme_file
+      # enforce_permission_to :update, :theme_file, theme_file: theme_file
       @form = form(ThemeFileForm).from_params(params)
 
       UpdateThemeFile.call(@form, theme_file, current_user) do
         on(:ok) do
           flash[:notice] = I18n.t("theme_maker.update.success", scope: "decidim.admin")
-          redirect_to decidim_admin_theme_maker_index_path
+          redirect_to theme_maker_index_path
         end
 
         on(:invalid) do
@@ -73,7 +75,7 @@ module Decidim::Theme::Maker::Admin
         end
       end
 
-      redirect_to decidim_admin_theme_maker_index_path
+      redirect_to theme_maker_index_path
     end
 
     private

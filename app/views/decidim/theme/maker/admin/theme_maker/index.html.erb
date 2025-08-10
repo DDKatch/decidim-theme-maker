@@ -43,9 +43,31 @@
                   <%= l theme_file.created_at, format: :long %>
                 </td>
                 <td class="table-list__actions">
-                  <%= icon_link_to "pencil", t("actions.edit", scope: "decidim.admin"), edit_theme_maker_path(theme_file), class: "action-icon--edit" %>
-                  <%= icon_link_to "eye", t("actions.preview", scope: "decidim.admin"), rails_blob_path(theme_file.file, disposition: :inline), class: "action-icon--preview", target: "_blank" %>
-                  <%= icon_link_to "trash", t("actions.destroy", scope: "decidim.admin"), theme_maker_path(theme_file), method: :delete, class: "action-icon--remove", data: { confirm: t("actions.confirm_destroy", scope: "decidim.admin") } %>
+                  <%= icon_link_to(
+                    theme_maker_icons[:pencil],
+                    edit_theme_maker_path(theme_file),
+                    t("actions.edit", scope: "decidim.admin"),
+                    class: "action-icon--edit"
+                  )%>
+                  <%= icon_link_to(
+                    theme_maker_icons[:eye],
+                    Rails.application.routes.url_helpers.rails_blob_path(
+                      theme_file.file,
+                      disposition: :inline,
+                      host: current_organization.host
+                    ),
+                    t("actions.preview", scope: "decidim.admin"),
+                    class: "action-icon--preview",
+                    target: "_blank")
+                  %>
+                  <%= icon_link_to(
+                    theme_maker_icons[:trash],
+                    theme_maker_path(theme_file),
+                    t("actions.destroy", scope: "decidim.admin"),
+                    method: :delete,
+                    class: "action-icon--remove",
+                    data: { confirm: t("actions.confirm_destroy", scope: "decidim.admin") }
+                  ) %>
                 </td>
               </tr>
             <% end %>

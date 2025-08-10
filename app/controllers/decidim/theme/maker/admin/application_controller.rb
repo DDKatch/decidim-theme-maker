@@ -5,6 +5,5 @@ module Decidim::Theme::Maker::Admin
     register_permissions(::Decidim::Theme::Maker::Admin::ApplicationController,
                          Decidim::Theme::Maker::Admin::Permissions,
                          Decidim::Admin::Permissions)
-
   end
 end

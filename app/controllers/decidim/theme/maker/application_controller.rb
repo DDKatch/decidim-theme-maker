@@ -1,8 +1,4 @@
-module Decidim
-  module Theme
-    module Maker
-      class ApplicationController < Decidim::ApplicationController
-      end
-    end
+module Decidim::Theme::Maker
+  class ApplicationController < Decidim::ApplicationController
   end
 end

@@ -10,6 +10,13 @@ module Decidim
   module Theme
     module Maker
       class AdminEngine < ::Rails::Engine
+        ICONS = {
+          paint_brush: "paint-brush-line",
+          pencil: "pencil-line",
+          eye: "eye-2-line",
+          trash: "delete-bin-2-line"
+        }.freeze
+
         isolate_namespace Decidim::Theme::Maker::Admin
 
         paths["db/migrate"] = nil
@@ -39,13 +46,15 @@ module Decidim
         end
 
         initializer "decidim_theme_maker_admin.register_icons" do
-          Decidim.icons.register(
-            name: "paint-brush-line",
-            icon: "paint-brush-line",
-            category: "system",
-            description: "",
-            engine: :theme_maker
-          )
+          ICONS.values.each do |icon|
+            Decidim.icons.register(
+              name: icon,
+              icon: icon,
+              category: "system",
+              description: "",
+              engine: :theme_maker
+            )
+          end
         end
 
         initializer "decidim_theme_maker_admin.menu" do

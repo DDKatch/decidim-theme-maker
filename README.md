@@ -14,7 +14,8 @@ A Decidim module that allows administrators to upload and manage CSS files for t
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "decidim-theme-maker", path: "path/to/decidim-theme-maker"
+gem "decidim-theme-maker", git: "https://github.com/DDKatch/decidim-theme-maker.git", branch: "main"
+
 ```
 
 And then execute:
@@ -27,21 +28,10 @@ bundle install
 
 Since this is a custom module, you'll need to install the migrations manually:
 
-**Option A: Using the installation script (Recommended)**
+**Run this command within your decidim application directory**
 ```bash
-cd path/to/decidim-theme-maker
-ruby install_migrations.rb
-cd /path/to/your/rails/app
-bundle exec rails db:migrate
+bundle exec rails decidim_theme_maker:install:migrations
 ```
-
-**Option B: Manual installation**
-```bash
-cp decidim-theme-maker/db/migrate/*.rb your_app/db/migrate/
-bundle exec rails db:migrate
-```
-
-For detailed installation instructions, see [INSTALLATION.md](INSTALLATION.md).
 
 ## Usage
 

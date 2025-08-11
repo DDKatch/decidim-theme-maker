@@ -33,6 +33,12 @@ Since this is a custom module, you'll need to install the migrations manually:
 bundle exec rails decidim_theme_maker:install:migrations
 ```
 
+### Integrating into the main application
+
+**Run this command within your decidim application directory**
+```bash
+bundle exec rails decidim_theme_maker:integrate:layouts
+```
 ## Usage
 
 1. Access the admin panel

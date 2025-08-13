@@ -41,10 +41,16 @@ bundle exec rails decidim_theme_maker:integrate:layouts
 ```
 ## Usage
 
+0. Visit organizatinon edit page under system admin account
+1. Press 'Show advanced settings' button
+3. Find 'File upload settings > Allowed file extensions > Admin file extensions' section
+4. Put 'css' into the input field
+5. Find 'File upload settings > Allowed file extensions > Admin MIME types' section
+6. Put 'text/css' into the input field
 1. Access the admin panel
-2. Navigate to "Theme Maker" in the admin menu
-3. Upload CSS files for your organization
-4. The CSS will be applied to your organization's pages
+8. Navigate to "Theme Maker" in the admin menu
+9. Upload CSS files for your organization
+10. The CSS will be applied to your organization's pages
 
 ## Development
 

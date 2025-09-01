@@ -31,7 +31,11 @@ module Decidim
             resources(
               :theme_maker,
               only: [:index, :new, :create, :edit, :update, :destroy],
-            )
+            ) do
+              member do
+                get :live_edit   # the two-pane editor + preview
+              end
+            end
           end
         end
 

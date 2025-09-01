@@ -1,0 +1,28 @@
+{
+  "name": "decidim-theme-maker",
+  "version": "1.0.0",
+  "description": "A Decidim module that allows administrators to upload and manage CSS files for their organization.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniil Kachur",
+  "license": "ISC",
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/stimulus-webpack-helpers": "^1.0.1",
+    "add": "^2.0.6"
+  },
+  "devDependencies": {
+    "@decidim/dev": "0.30.0",
+    "@decidim/eslint-config": "0.30.0",
+    "@decidim/prettier-config": "0.30.0",
+    "@decidim/stylelint-config": "0.30.0",
+    "postcss-scss": "^4.0.9",
+    "sass-embedded": "^1.83.1"
+  }
+}

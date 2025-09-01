@@ -9,3 +9,34 @@
     )
   %>
 <% end %>
+
+
+<%# Live preview injector (only enable when previewing) %>
+<% if params[:live_preview].present? %>
+<script>
+  (function() {
+    // Create or reuse a <style> tag for live preview updates
+    function ensurePreviewStyleTag() {
+      var el = document.getElementById("live-css-preview");
+      if (!el) {
+        el = document.createElement("style");
+        el.type = "text/css";
+        el.id = "live-css-preview";
+        document.head.appendChild(el);
+      }
+      return el;
+    }
+
+    window.addEventListener("message", function(event) {
+      // Optional origin check:
+      // if (event.origin !== window.location.origin) return;
+
+      var data = event.data || {};
+      if (data.type === "live-css") {
+        var tag = ensurePreviewStyleTag();
+        tag.textContent = data.css || "";
+      }
+    }, false);
+  })();
+</script>
+<% end %>

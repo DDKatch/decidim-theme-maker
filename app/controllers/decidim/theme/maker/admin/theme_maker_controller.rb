@@ -10,7 +10,6 @@ module Decidim::Theme::Maker::Admin
     add_breadcrumb_item_from_menu :admin_settings_menu
 
     def index
-      puts "\n\n Decidim::Theme::Maker::Admin::ThemeMakerController <:index> \n\n"
       # enforce_permission_to :read, :theme_file
       #
       @theme_files = Decidim::Theme::Maker::ThemeFile

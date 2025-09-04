@@ -5,18 +5,27 @@
   <div class="w-[50%] flex flex-col gap-1">
     <h2><%= @theme_file.name[current_locale] %></h2>
 
-    <%= form_with model: @theme_file,
+    <% form_params = {
+      model: @theme_file,
       url: theme_maker_path(@theme_file),
       method: :put,
-      local: true do |f| %>
+      local: true
+    } %>
 
-      <%= f.hidden_field :name, value: @theme_file.name[current_locale] %>
-      <%= f.hidden_field :description, value: @theme_file.description[current_locale] %>
+    <%= form_with(**form_params) do |form| %>
+      <%= form.hidden_field(
+        :name,
+        value: @theme_file.name
+      ) %>
+
+      <%= form.hidden_field(
+        :description,
+        value: @theme_file.description,
+      ) %>
 
       <div class="flex flex-col">
-        <%= f.text_area :body,
+        <%= form.text_area :body,
           rows: 30,
-          id: "css-editor",
           data: {
             action: "input->live-css-editor#send",
             live_css_editor_target: "textarea"
@@ -26,7 +35,7 @@
         %>
       </div>
       <div style="margin-top:8px;">
-        <%= f.submit "Save", class: "btn" %>
+        <%= form.submit "Save", class: "btn" %>
       </div>
     <% end %>
   </div>

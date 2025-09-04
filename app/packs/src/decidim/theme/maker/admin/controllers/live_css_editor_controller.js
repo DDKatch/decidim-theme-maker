@@ -15,7 +15,6 @@ export default class extends Controller {
   }
 
   postCSS(css) {
-    debugger;
     const iframe = this.iframeTarget;
     if (!iframe || !iframe.contentWindow) return;
     iframe.contentWindow.postMessage({ type: "live-css", css }, "*");

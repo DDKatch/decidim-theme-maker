@@ -1,5 +1,8 @@
-<div class="container" style="display:flex; gap:16px; height: calc(100vh - 140px);">
-  <div data-controller="live-css-editor" style="flex: 1; display:flex; flex-direction:column;">
+<div data-controller="live-css-editor"
+  class="flex flex-row space-between gap-4"
+  style="height: calc(100vh - 140px);"
+>
+  <div class="w-[50%] flex flex-col gap-1">
     <h2><%= @theme_file.name[current_locale] %></h2>
 
     <%= form_with model: @theme_file,
@@ -25,35 +28,33 @@
       <div style="margin-top:8px;">
         <%= f.submit "Save", class: "btn" %>
       </div>
-
-    <div data-controller="bg_c">
-      <div data-bg_c-colors-value='["#fde68a","#a7f3d0","#93c5fd","#fecaca"]'
-        data-bg_c-target="box"
-        class="p-4 rounded"
-      >
-        Click the button to change my background
-      </div>
-
-      <button
-        type="button"
-        data-action="bg_c#next"
-        class="mt-2 px-3 py-1 border rounded">
-        Change color
-      </button>
-    </div>
-
-
     <% end %>
   </div>
 
-  <div style="flex: 1; border:1px solid #ddd;">
+  <div class="flex border-1 w-[50%]">
     <!-- Load the normal landing page inside the iframe -->
     <iframe id="landing-preview"
             src="/?live_preview=1"
-            style="width:100%; height:100%; border:0;"
+            class="w-full h-full border-0"
             data-live-css-editor-target="iframe">
+    >
     </iframe>
   </div>
+</div>
+
+<div data-controller="bg_c">
+  <div data-bg_c-target="box"
+    class="p-4 rounded"
+  >
+    Click the button to change my background
+  </div>
+
+  <button
+    type="button"
+    data-action="bg_c#next"
+    class="mt-2 px-3 py-1 border rounded">
+    Change color
+  </button>
 </div>
 
 <%= append_javascript_pack_tag "decidim_admin_theme_maker" %>

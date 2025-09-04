@@ -1,4 +1,17 @@
 <% current_organization.theme_files.each do |theme_file| %>
+  <%# Include global CSS everywhere %>
+  <% if theme_file.global %>
+    <%= stylesheet_link_tag(
+      Rails.application.routes.url_helpers.rails_blob_path(
+        theme_file.file,
+        disposition: :inline,
+        host: current_organization.host
+      ),
+      media: "all"
+    ) %>
+    <% next %>
+  <% end %>
+
   <%# Only include CSS when page_url matches current path %>
   <% next if theme_file.page_url.blank? %>
   <% begin %>

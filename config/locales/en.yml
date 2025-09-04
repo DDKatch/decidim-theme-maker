@@ -1,5 +1,12 @@
 en:
   decidim:
+    theme:
+      maker:
+        admin:
+          theme_maker:
+            live_edit:
+              global: Global (apply to all pages)
+              save: Save
     theme_maker:
       menu:
         theme_maker: "Theme Maker"
@@ -28,6 +35,7 @@ en:
           fields:
             page_url: "Page URL"
             file: "CSS File"
+            global: "Applied globally"
             filename: "Filename"
             file_size: "File Size"
             created_at: "Created At"
@@ -36,4 +44,4 @@ en:
         edit: "Edit"
         preview: "Preview"
         destroy: "Delete"
-        confirm_destroy: "Are you sure you want to delete this theme file?" 
+        confirm_destroy: "Are you sure you want to delete this theme file?"

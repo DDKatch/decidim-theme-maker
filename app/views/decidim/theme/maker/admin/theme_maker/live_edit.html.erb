@@ -1,7 +1,7 @@
 <div data-controller="live-css-editor"
   data-action="submit->live-css-editor#prepare"
   data-live-css-editor-filename-value="<%= @theme_file.filename || 'theme.css' %>"
-  style="height: calc(100vh - 180px);"
+  style="height: calc(100vh - 140px);"
 >
 
   <% form_params = {
@@ -20,6 +20,13 @@
         class: "flex w-[50%] border border-gray-300 rounded px-1",
         required: true
       ) %>
+    </div>
+
+    <div class="mb-4">
+      <div class="inline-flex items-center gap-2">
+        <%= form.check_box :global, {label: false}, true, false %>
+        <span><%= t(".global")%></span>
+      </div>
     </div>
 
     <div class="flex flex-row space-between gap-4">
@@ -42,10 +49,12 @@
         %>
       </div>
 
+      <% preview_url = (@theme_file.page_url || "/") + (@theme_file.page_url.include?("?") ? "&" : "?") + "live_preview=1" %>
+
       <div class="flex border-1 w-[70%]">
         <!-- Load the normal landing page inside the iframe -->
         <iframe id="landing-preview"
-          src="<%= (@theme_file.page_url || "/") + (@theme_file.page_url.include?("?") ? "&" : "?") + "live_preview=1" %>"
+          src="<%= preview_url %>"
           class="w-full h-full border"
           data-live-css-editor-target="iframe">
           >
@@ -54,7 +63,7 @@
     </div>
 
     <div style="margin-top:8px;">
-      <%= form.submit "Save", class: "mt-2 px-3 py-1 border rounded" %>
+      <%= form.submit t(".save"), class: "mt-2 px-3 py-1 border rounded" %>
     </div>
   <% end %>
 </div>

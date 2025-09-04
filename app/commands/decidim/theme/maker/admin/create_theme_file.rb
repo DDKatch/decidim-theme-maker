@@ -44,6 +44,7 @@ module Decidim::Theme::Maker::Admin
       Decidim::Theme::Maker::ThemeFile.new(
         organization: @organization,
         page_url: form.page_url,
+        global: form.global,
         file: form.file
       )
     end

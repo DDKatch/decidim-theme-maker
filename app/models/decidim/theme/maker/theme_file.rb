@@ -14,6 +14,7 @@ module Decidim
         validates_upload :file, uploader: Decidim::Theme::Maker::ThemeFileUploader
 
         validates :page_url, presence: true
+        attribute :global, :boolean, default: false
 
         delegate :attached?, to: :file
 

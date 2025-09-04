@@ -6,6 +6,11 @@
   </div>
 
   <div class="flex-col p-2 border-4 round-2 border-gray-5">
+    <%= form.check_box :global %>
+    <%= form.label :global, "Global (apply to all pages)" %>
+  </div>
+
+  <div class="flex-col p-2 border-4 round-2 border-gray-5">
     <%= form.upload(
       :file,
       label: t("models.theme_file.fields.file", scope: "decidim.admin"),

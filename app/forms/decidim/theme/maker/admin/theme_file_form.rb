@@ -10,6 +10,7 @@ module Decidim::Theme::Maker::Admin
 
     attribute :page_url, String
     attribute :file, Decidim::Attributes::Blob
+    attribute :global, Boolean
 
     validates :page_url, presence: true
     validates :file, presence: true, if: :new_record?

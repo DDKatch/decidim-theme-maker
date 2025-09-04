@@ -4,8 +4,9 @@ en:
       maker:
         admin:
           theme_maker:
-            live_edit:
+            form:
               global: Global (apply to all pages)
+            edit:
               save: Save
     theme_maker:
       menu:

@@ -11,6 +11,7 @@ export default class extends Controller {
     this.prepare = this.prepare.bind(this);
     this.toggleGlobal = this.toggleGlobal.bind(this);
     this.updateIframeFromUrl = this.updateIframeFromUrl.bind(this);
+    this.fileSelected = this.fileSelected.bind(this);
 
     // Capture initial page URL to allow restore when toggling global off
     this.initialPageUrl = this.hasPageUrlTarget ? (this.pageUrlTarget.value || "") : "";
@@ -89,5 +90,29 @@ export default class extends Controller {
     const raw = this.pageUrlTarget.value || "/";
     const previewUrl = raw.includes("?") ? `${raw}&live_preview=1` : `${raw}?live_preview=1`;
     this.iframeTarget.src = previewUrl;
+  }
+
+  fileSelected(event) {
+    try {
+      const input = event?.target || this.fileInputTarget;
+      if (!input) return;
+      const file = input.files && input.files[0];
+      if (!file) {
+        if (this.hasTextareaTarget) this.textareaTarget.value = "";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (this.hasTextareaTarget) {
+          this.textareaTarget.value = reader.result || "";
+          // Optionally update live preview if available
+          this.send();
+        }
+      };
+      reader.readAsText(file);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to read selected file", e);
+    }
   }
 }

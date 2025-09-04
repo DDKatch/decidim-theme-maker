@@ -78,11 +78,6 @@ module Decidim::Theme::Maker::Admin
       redirect_to theme_maker_index_path
     end
 
-    def live_edit
-      @theme_file = theme_file
-      # Renders the editor + preview split view
-    end
-
     private
 
     def theme_file

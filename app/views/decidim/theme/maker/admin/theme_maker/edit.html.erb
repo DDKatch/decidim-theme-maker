@@ -1,26 +1,22 @@
-<% content_for :title do %>
-  <%= t("title", scope: "decidim.admin.theme_maker") %>
-<% end %>
+<div data-controller="live-css-editor"
+  data-action="submit->live-css-editor#prepare"
+  data-live-css-editor-filename-value="<%= @theme_file.filename || 'theme.css' %>"
+  style="height: calc(100vh - 140px);"
+>
 
-<div class="card">
-  <div class="card-divider">
-    <h2 class="card-title">
-      <%= t("actions.edit", scope: "decidim.admin.theme_maker") %>
-    </h2>
-  </div>
+  <% form_params = {
+    model: @theme_file,
+    url: theme_maker_path(@theme_file),
+    method: :put,
+    local: true,
+    html: { multipart: true }
+  } %>
 
-  <div class="card-section">
-    <%= decidim_form_for(
-      @form,
-      url: theme_maker_path(@form.id),
-      method: :patch,
-      html: { class: "form theme_maker_form" }
-    ) do |form| %>
-      <%= render partial: "form", locals: { form: form } %>
+  <%= form_with(**form_params) do |form| %>
+    <%= render partial: "form", locals: { form: form, theme_file: @theme_file, show_preview: true } %>
 
-      <div class="button--double form-general-submit">
-        <%= form.submit t("actions.update", scope: "decidim.admin.theme_maker") %>
-      </div>
-    <% end %>
-  </div>
+    <div style="margin-top:8px;">
+      <%= form.submit t(".save"), class: "mt-2 px-3 py-1 border rounded" %>
+    </div>
+  <% end %>
 </div>

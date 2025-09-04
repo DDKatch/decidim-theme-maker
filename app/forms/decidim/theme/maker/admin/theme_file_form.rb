@@ -8,10 +8,10 @@ module Decidim::Theme::Maker::Admin
 
     mimic :theme_file
 
-    translatable_attribute :description, String
+    attribute :page_url, String
     attribute :file, Decidim::Attributes::Blob
 
-    validates :description, translatable_presence: true
+    validates :page_url, presence: true
     validates :file, presence: true, if: :new_record?
 
     def map_model(model)

@@ -13,7 +13,7 @@ module Decidim
         has_one_attached :file
         validates_upload :file, uploader: Decidim::Theme::Maker::ThemeFileUploader
 
-        validates :description, presence: true
+        validates :page_url, presence: true
 
         delegate :attached?, to: :file
 

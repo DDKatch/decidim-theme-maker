@@ -17,7 +17,7 @@
           <thead>
             <tr>
               
-              <th><%= t("models.theme_file.fields.description", scope: "decidim.admin") %></th>
+              <th><%= t("models.theme_file.fields.page_url", scope: "decidim.admin") %></th>
               <th><%= t("models.theme_file.fields.filename", scope: "decidim.admin") %></th>
               <th><%= t("models.theme_file.fields.file_size", scope: "decidim.admin") %></th>
               <th><%= t("models.theme_file.fields.created_at", scope: "decidim.admin") %></th>
@@ -29,7 +29,7 @@
               <tr>
                 
                 <td>
-                  <%= translated_attribute(theme_file.description) %>
+                  <%= translated_attribute(theme_file.page_url) %>
                 </td>
                 <td>
                   <%= theme_file.filename %>

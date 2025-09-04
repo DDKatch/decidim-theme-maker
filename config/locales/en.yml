@@ -26,7 +26,7 @@ en:
       models:
         theme_file:
           fields:
-            description: "Description"
+            page_url: "Page URL"
             file: "CSS File"
             filename: "Filename"
             file_size: "File Size"

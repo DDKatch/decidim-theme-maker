@@ -1,13 +1,25 @@
 <% current_organization.theme_files.each do |theme_file| %>
-  <%= stylesheet_link_tag(
+  <%# Only include CSS when page_url matches current path %>
+  <% next if theme_file.page_url.blank? %>
+  <% begin %>
+  <%   url = translated_attribute(theme_file.page_url).to_s %>
+  <%   uri = URI.parse(url) rescue nil %>
+  <%   path_to_match = uri&.path.presence || url %>
+  <%   current_path = request.fullpath %>
+  <%   should_include = path_to_match.present? && current_path.start_with?(path_to_match) %>
+  <% rescue %>
+  <%   should_include = false %>
+  <% end %>
+  <% if should_include %>
+    <%= stylesheet_link_tag(
       Rails.application.routes.url_helpers.rails_blob_path(
         theme_file.file,
         disposition: :inline,
         host: current_organization.host
       ),
       media: "all"
-    )
-  %>
+    ) %>
+  <% end %>
 <% end %>
 
 
@@ -15,7 +27,6 @@
 <% if params[:live_preview].present? %>
 <script>
   (function() {
-    // Create or reuse a <style> tag for live preview updates
     function ensurePreviewStyleTag() {
       var el = document.getElementById("live-css-preview");
       if (!el) {
@@ -28,13 +39,7 @@
     }
 
     window.addEventListener("message", function(event) {
-      // Optional origin check:
-      // if (event.origin !== window.location.origin) return;
-
       var data = event.data || {};
-
-      console.log("root page got 'message' with type == ", data.type)
-
       if (data.type === "live-css") {
         var tag = ensurePreviewStyleTag();
         tag.textContent = data.css || "";

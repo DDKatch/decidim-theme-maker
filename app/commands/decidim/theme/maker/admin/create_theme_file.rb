@@ -43,7 +43,7 @@ module Decidim::Theme::Maker::Admin
     def build_theme_file
       Decidim::Theme::Maker::ThemeFile.new(
         organization: @organization,
-        description: form.description,
+        page_url: form.page_url,
         file: form.file
       )
     end

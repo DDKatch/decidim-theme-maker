@@ -13,11 +13,13 @@
   } %>
 
   <%= form_with(**form_params) do |form| %>
-
-    <%= form.hidden_field(
-      :description,
-      value: @theme_file.description,
-    ) %>
+    <div class="mb-4">
+      <%= form.text_field(
+        :page_url,
+        value: @theme_file.page_url,
+        class: "flex w-[50%] border border-gray-300 rounded px-1"
+      ) %>
+    </div>
 
     <div class="flex flex-row space-between gap-4">
       <div class="w-[30%] h-full flex flex-col gap-1">
@@ -42,7 +44,7 @@
       <div class="flex border-1 w-[70%]">
         <!-- Load the normal landing page inside the iframe -->
         <iframe id="landing-preview"
-          src="/?live_preview=1"
+          src="<%= (@theme_file.page_url || "/") + (@theme_file.page_url.include?("?") ? "&" : "?") + "live_preview=1" %>"
           class="w-full h-full border-0"
           data-live-css-editor-target="iframe">
           >

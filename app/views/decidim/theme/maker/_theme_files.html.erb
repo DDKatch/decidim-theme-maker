@@ -32,6 +32,9 @@
       // if (event.origin !== window.location.origin) return;
 
       var data = event.data || {};
+
+      console.log("root page got 'message' with type == ", data.type)
+
       if (data.type === "live-css") {
         var tag = ensurePreviewStyleTag();
         tag.textContent = data.css || "";

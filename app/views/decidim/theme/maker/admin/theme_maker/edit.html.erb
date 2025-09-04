@@ -10,7 +10,12 @@
   </div>
 
   <div class="card-section">
-    <%= decidim_form_for(@form, url: theme_maker_path(@form.id), method: :patch, html: { class: "form theme_maker_form" }) do |form| %>
+    <%= decidim_form_for(
+      @form,
+      url: theme_maker_path(@form.id),
+      method: :patch,
+      html: { class: "form theme_maker_form" }
+    ) do |form| %>
       <%= render partial: "form", locals: { form: form } %>
 
       <div class="button--double form-general-submit">

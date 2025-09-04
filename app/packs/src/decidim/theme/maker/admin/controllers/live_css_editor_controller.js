@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["textarea", "iframe", "fileInput", "form"];
+  static targets = ["textarea", "iframe", "fileInput", "form", "pageUrl", "globalCheckbox"];
   static values = { filename: String };
 
   init() {}
@@ -9,7 +9,16 @@ export default class extends Controller {
   connect() {
     this.send = this.send.bind(this);
     this.prepare = this.prepare.bind(this);
+    this.toggleGlobal = this.toggleGlobal.bind(this);
+    this.updateIframeFromUrl = this.updateIframeFromUrl.bind(this);
+
+    // Capture initial page URL to allow restore when toggling global off
+    this.initialPageUrl = this.hasPageUrlTarget ? (this.pageUrlTarget.value || "") : "";
+
     this.postCSS(this.textareaTarget.value);
+
+    // Ensure UI reflects current global state on load
+    this.syncGlobalUI();
   }
 
   send() {
@@ -33,9 +42,52 @@ export default class extends Controller {
     }
   }
 
+  toggleGlobal() {
+    this.syncGlobalUI();
+  }
+
+  syncGlobalUI() {
+    if (!this.hasPageUrlTarget || !this.hasGlobalCheckboxTarget) return;
+
+    if (this.globalCheckboxTarget.checked) {
+      // Store the original only the first time we flip to global
+      if (typeof this.originalPageUrl === "undefined") {
+        this.originalPageUrl = this.pageUrlTarget.value || this.initialPageUrl || "";
+      }
+      this.pageUrlTarget.value = document.location.origin;
+      // Make it read-only so it submits but cannot be edited
+      this.pageUrlTarget.setAttribute("readonly", "readonly");
+      this.pageUrlTarget.setAttribute("aria-disabled", "true");
+    } else {
+      // Restore previously stored value when leaving global mode
+      const restore = typeof this.originalPageUrl !== "undefined" ? this.originalPageUrl : this.initialPageUrl;
+      this.pageUrlTarget.removeAttribute("readonly");
+      this.pageUrlTarget.removeAttribute("aria-disabled");
+      this.pageUrlTarget.value = restore || "";
+    }
+
+    this.updateIframe();
+  }
+
   postCSS(css) {
+    console.log("POST CSS")
     const iframe = this.iframeTarget;
     if (!iframe || !iframe.contentWindow) return;
     iframe.contentWindow.postMessage({ type: "live-css", css }, "*");
+  }
+
+  updateIframeFromUrl(event) {
+    if (event && typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
+    if (!this.hasIframeTarget || !this.hasPageUrlTarget) return;
+
+    this.updateIframe();
+  }
+
+  updateIframe() {
+    const raw = this.pageUrlTarget.value || "/";
+    const previewUrl = raw.includes("?") ? `${raw}&live_preview=1` : `${raw}?live_preview=1`;
+    this.iframeTarget.src = previewUrl;
   }
 }

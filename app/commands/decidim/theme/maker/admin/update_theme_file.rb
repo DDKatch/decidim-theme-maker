@@ -43,7 +43,7 @@ module Decidim::Theme::Maker::Admin
     def update_theme_file
       theme_file.assign_attributes(
         page_url: form.page_url,
-        global: form.global
+        global: form.global.nil? ? false : form.global
       )
 
       theme_file.file = form.file if form.file.present?

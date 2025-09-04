@@ -15,11 +15,11 @@
   <%# Only include CSS when page_url matches current path %>
   <% next if theme_file.page_url.blank? %>
   <% begin %>
-  <%   url = translated_attribute(theme_file.page_url).to_s %>
+  <%   url = theme_file.page_url %>
   <%   uri = URI.parse(url) rescue nil %>
   <%   path_to_match = uri&.path.presence || url %>
-  <%   current_path = request.fullpath %>
-  <%   should_include = path_to_match.present? && current_path.start_with?(path_to_match) %>
+  <%   current_url = request.url %>
+  <%   should_include = path_to_match.present? && current_url.start_with?(path_to_match) %>
   <% rescue %>
   <%   should_include = false %>
   <% end %>

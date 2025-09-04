@@ -1,21 +1,15 @@
 <div class="container flex flex-col gap-y-4">
-  
-
   <div class="flex-col p-2 border-4 round-2 border-gray-5">
-    <%= form.translated :text_field, :page_url, rows: 1 %>
+    <%= form.text_field :page_url, required: true %>
   </div>
 
   <div class="flex-col p-2 border-4 round-2 border-gray-5">
-    <%= form.check_box :global %>
+    <%= form.check_box :global, { checked: (@form.global == true) }, true, false %>
     <%= form.label :global, "Global (apply to all pages)" %>
   </div>
 
   <div class="flex-col p-2 border-4 round-2 border-gray-5">
-    <%= form.upload(
-      :file,
-      label: t("models.theme_file.fields.file", scope: "decidim.admin"),
-      direct_upload: true,
-      accept: ".css,text/css"
-    ) %>
+    <%= form.label :file, t("models.theme_file.fields.file", scope: "decidim.admin") %>
+    <%= form.file_field :file, direct_upload: true, accept: ".css,text/css" %>
   </div>
 </div>

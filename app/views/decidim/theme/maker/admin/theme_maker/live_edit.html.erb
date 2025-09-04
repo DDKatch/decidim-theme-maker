@@ -1,69 +1,51 @@
-<div data-controller="live-css-editor"
-  class="flex flex-row space-between gap-4"
-  style="height: calc(100vh - 140px);"
->
-  <div class="w-[50%] flex flex-col gap-1">
-    <h2><%= @theme_file.name[current_locale] %></h2>
+<% form_params = {
+  model: @theme_file,
+  url: theme_maker_path(@theme_file),
+  method: :put,
+  local: true
+} %>
+<%= form_with(**form_params) do |form| %>
+  <h2><%= @theme_file.name[current_locale] %></h2>
+  <%= form.hidden_field(
+    :name,
+    value: @theme_file.name
+  ) %>
 
-    <% form_params = {
-      model: @theme_file,
-      url: theme_maker_path(@theme_file),
-      method: :put,
-      local: true
-    } %>
+  <%= form.hidden_field(
+    :description,
+    value: @theme_file.description,
+  ) %>
 
-    <%= form_with(**form_params) do |form| %>
-      <%= form.hidden_field(
-        :name,
-        value: @theme_file.name
-      ) %>
-
-      <%= form.hidden_field(
-        :description,
-        value: @theme_file.description,
-      ) %>
-
-      <div class="flex flex-col">
-        <%= form.text_area :body,
-          rows: 30,
-          data: {
-            action: "input->live-css-editor#send",
-            live_css_editor_target: "textarea"
-          },
-          class: "w-full",
-          value: @theme_file.file.open { |io| io.read.force_encoding("UTF-8") }
-        %>
-      </div>
-      <div style="margin-top:8px;">
-        <%= form.submit "Save", class: "btn" %>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="flex border-1 w-[50%]">
-    <!-- Load the normal landing page inside the iframe -->
-    <iframe id="landing-preview"
-            src="/?live_preview=1"
-            class="w-full h-full border-0"
-            data-live-css-editor-target="iframe">
+  <div data-controller="live-css-editor"
+    class="flex flex-row space-between gap-4"
+    style="height: calc(100vh - 180px);"
     >
-    </iframe>
+    <div class="w-[50%] h-full flex flex-col gap-1">
+      <%= form.text_area :body,
+        label: false,
+        rows: 30,
+        data: {
+          action: "input->live-css-editor#send",
+          live_css_editor_target: "textarea"
+        },
+        class: "w-full h-full",
+        value: @theme_file.file.open { |io| io.read.force_encoding("UTF-8") }
+      %>
+    </div>
+
+    <div class="flex border-1 w-[50%]">
+      <!-- Load the normal landing page inside the iframe -->
+      <iframe id="landing-preview"
+        src="/?live_preview=1"
+        class="w-full h-full border-0"
+        data-live-css-editor-target="iframe">
+        >
+      </iframe>
+    </div>
   </div>
-</div>
 
-<div data-controller="bg_c">
-  <div data-bg_c-target="box"
-    class="p-4 rounded"
-  >
-    Click the button to change my background
+  <div style="margin-top:8px;">
+    <%= form.submit "Save", class: "mt-2 px-3 py-1 border rounded" %>
   </div>
-
-  <button
-    type="button"
-    data-action="bg_c#next"
-    class="mt-2 px-3 py-1 border rounded">
-    Change color
-  </button>
-</div>
-
+<% end %>
 <%= append_javascript_pack_tag "decidim_admin_theme_maker" %>

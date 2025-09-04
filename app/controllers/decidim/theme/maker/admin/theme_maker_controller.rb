@@ -25,6 +25,7 @@ module Decidim::Theme::Maker::Admin
 
     def create
       # enforce_permission_to :create, :theme_file
+
       @form = form(ThemeFileForm).from_params(params)
 
       CreateThemeFile.call(@form, current_user, current_organization) do

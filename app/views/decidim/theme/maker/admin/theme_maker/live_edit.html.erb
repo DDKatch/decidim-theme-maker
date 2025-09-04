@@ -1,6 +1,6 @@
 <div data-controller="live-css-editor"
   data-action="submit->live-css-editor#prepare"
-  data-live-css-editor-filename-value="<%= @theme_file.name %>.css"
+  data-live-css-editor-filename-value="<%= @theme_file.filename || 'theme.css' %>"
   style="height: calc(100vh - 180px);"
 >
 
@@ -13,17 +13,13 @@
   } %>
 
   <%= form_with(**form_params) do |form| %>
-    <%= form.hidden_field(
-      :name,
-      value: @theme_file.name
-    ) %>
 
     <%= form.hidden_field(
       :description,
       value: @theme_file.description,
     ) %>
 
-    <div class="flex flex-row space-between gap-4"">
+    <div class="flex flex-row space-between gap-4">
       <div class="w-[30%] h-full flex flex-col gap-1">
         <%= form.file_field :file,
           label: false,

@@ -16,7 +16,7 @@
         <table class="table-list">
           <thead>
             <tr>
-              <th><%= t("models.theme_file.fields.name", scope: "decidim.admin") %></th>
+              
               <th><%= t("models.theme_file.fields.description", scope: "decidim.admin") %></th>
               <th><%= t("models.theme_file.fields.filename", scope: "decidim.admin") %></th>
               <th><%= t("models.theme_file.fields.file_size", scope: "decidim.admin") %></th>
@@ -27,9 +27,7 @@
           <tbody>
             <% @theme_files.each do |theme_file| %>
               <tr>
-                <td>
-                  <%= translated_attribute(theme_file.name) %>
-                </td>
+                
                 <td>
                   <%= translated_attribute(theme_file.description) %>
                 </td>

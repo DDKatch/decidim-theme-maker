@@ -42,7 +42,6 @@ module Decidim::Theme::Maker::Admin
 
     def update_theme_file
       theme_file.assign_attributes(
-        name: form.name,
         description: form.description
       )
 

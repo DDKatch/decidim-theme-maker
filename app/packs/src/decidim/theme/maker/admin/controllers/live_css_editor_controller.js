@@ -11,12 +11,7 @@ export default class extends Controller {
     "form",
     "pageUrl",
     "globalCheckbox",
-    "editor",
-    // Resize-related targets
-    "container",
-    "leftPane",
-    "rightPane",
-    "handle"
+    "editor"
   ];
   static values = { filename: String };
 
@@ -30,9 +25,7 @@ export default class extends Controller {
     this.fileSelected = this.fileSelected.bind(this);
     this.setupAce = this.setupAce.bind(this);
     this.handleModalFileChange = this.handleModalFileChange.bind(this);
-    this.startResize = this.startResize.bind(this);
-    this.onResizeMove = this.onResizeMove.bind(this);
-    this.stopResize = this.stopResize.bind(this);
+    this.onSplitPaneMove = this.onSplitPaneMove.bind(this);
 
     // Capture initial page URL to allow restore when toggling global off
     this.initialPageUrl = this.hasPageUrlTarget ? (this.pageUrlTarget.value || "") : "";
@@ -47,14 +40,15 @@ export default class extends Controller {
     // Use capture to catch events from hidden inputs before they are possibly stopped
     document.addEventListener("change", this.handleModalFileChange, true);
 
-    // Initialize splitter positions if both panes exist
-    this.initializeSplitter();
+    // Listen to split-pane move/stop events to resize Ace as needed
+    this.element.addEventListener("split-pane:move", this.onSplitPaneMove);
+    this.element.addEventListener("split-pane:stop", this.onSplitPaneMove);
   }
 
   disconnect() {
     document.removeEventListener("change", this.handleModalFileChange, true);
-    this.detachResizeListeners();
-    this.enableIframePointerEvents();
+    this.element.removeEventListener("split-pane:move", this.onSplitPaneMove);
+    this.element.removeEventListener("split-pane:stop", this.onSplitPaneMove);
   }
 
   send() {
@@ -204,112 +198,9 @@ export default class extends Controller {
     }
   }
 
-  // --- Splitter / Resize logic ---
-  initializeSplitter() {
-    if (!this.hasContainerTarget || !this.hasLeftPaneTarget || !this.hasRightPaneTarget || !this.hasHandleTarget) return;
-
-    // Ensure container is positioned for correct calculations
-    const container = this.containerTarget;
-    if (getComputedStyle(container).position === "static") {
-      container.style.position = "relative";
-    }
-
-    // Set initial widths based on existing layout
-    // Left is 30% by default per view; ensure right takes remaining space
-    this.leftPaneTarget.style.flex = "0 0 30%";
-    this.rightPaneTarget.style.flex = "1 1 auto";
-
-    // Clean any inline widths that might conflict
-    this.leftPaneTarget.style.width = "auto";
-    this.rightPaneTarget.style.width = "auto";
-  }
-
-  startResize(event) {
-    if (!this.hasContainerTarget || !this.hasLeftPaneTarget || !this.hasRightPaneTarget) return;
-    event.preventDefault();
-
-    const isTouch = event.type === "touchstart";
-    const point = isTouch ? event.touches[0] : event;
-
-    const rect = this.containerTarget.getBoundingClientRect();
-    this._resizeState = {
-      containerLeft: rect.left,
-      containerWidth: rect.width,
-      startX: point.clientX
-    };
-
-    // Attach listeners to window to track outside container
-    window.addEventListener("mousemove", this.onResizeMove, { passive: false });
-    window.addEventListener("touchmove", this.onResizeMove, { passive: false });
-    window.addEventListener("mouseup", this.stopResize);
-    window.addEventListener("touchend", this.stopResize);
-
-    // Ensure the iframe does not swallow pointer events during drag
-    this.disableIframePointerEvents();
-  }
-
-  onResizeMove(event) {
-    if (!this._resizeState) return;
-    const isTouch = event.type === "touchmove";
-    const point = isTouch ? event.touches[0] : event;
-
-    // Prevent page scroll while resizing on touch
-    if (isTouch) {
-      event.preventDefault();
-    }
-
-    const { containerLeft, containerWidth } = this._resizeState;
-    const x = point.clientX - containerLeft;
-    const minLeftPct = 10; // minimum 10%
-    const maxLeftPct = 80; // maximum 80%
-    let leftPct = (x / containerWidth) * 100;
-    if (leftPct < minLeftPct) leftPct = minLeftPct;
-    if (leftPct > maxLeftPct) leftPct = maxLeftPct;
-
-    this.leftPaneTarget.style.flex = `0 0 ${leftPct}%`;
-    this.rightPaneTarget.style.flex = "1 1 auto";
-
-    // Trigger layout for Ace editor to adapt
+  onSplitPaneMove() {
     if (this.editor) {
       this.editor.resize();
-    }
-  }
-
-  stopResize() {
-    this.detachResizeListeners();
-    this._resizeState = null;
-    this.enableIframePointerEvents();
-    if (this.editor) {
-      this.editor.resize();
-    }
-  }
-
-  detachResizeListeners() {
-    window.removeEventListener("mousemove", this.onResizeMove, { passive: false });
-    window.removeEventListener("touchmove", this.onResizeMove, { passive: false });
-    window.removeEventListener("mouseup", this.stopResize);
-    window.removeEventListener("touchend", this.stopResize);
-  }
-
-  disableIframePointerEvents() {
-    try {
-      if (this.hasIframeTarget && this.iframeTarget) {
-        this._iframePrevPointerEvents = this.iframeTarget.style.pointerEvents;
-        this.iframeTarget.style.pointerEvents = "none";
-      }
-    } catch (_) {
-      // no-op
-    }
-  }
-
-  enableIframePointerEvents() {
-    try {
-      if (this.hasIframeTarget && this.iframeTarget) {
-        this.iframeTarget.style.pointerEvents = this._iframePrevPointerEvents || "";
-        this._iframePrevPointerEvents = null;
-      }
-    } catch (_) {
-      // no-op
     }
   }
 }

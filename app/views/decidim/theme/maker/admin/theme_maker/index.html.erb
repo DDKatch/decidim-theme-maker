@@ -53,17 +53,6 @@
                     class: "action-icon--edit"
                   )%>
                   <%= icon_link_to(
-                    theme_maker_icons[:eye],
-                    Rails.application.routes.url_helpers.rails_blob_path(
-                      theme_file.file,
-                      disposition: :inline,
-                      host: current_organization.host
-                    ),
-                    t("actions.preview", scope: "decidim.admin"),
-                    class: "action-icon--preview",
-                    target: "_blank")
-                  %>
-                  <%= icon_link_to(
                     theme_maker_icons[:trash],
                     theme_maker_path(theme_file),
                     t("actions.destroy", scope: "decidim.admin"),

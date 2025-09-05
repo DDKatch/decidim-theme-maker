@@ -41,7 +41,10 @@
   </div>
 
   <div class="p-2 border-2 rounded-md border-white bg-white">
-    <div class="flex flex-row space-between gap-0" data-controller="split-pane" data-split-pane-target="container">
+    <div class="flex flex-row space-between gap-0"
+      data-controller="split-pane"
+      data-split-pane-target="container"
+    >
       <div class="w-[30%] h-full flex" data-split-pane-target="left">
         <% body_value = nil %>
         <% if defined?(theme_file) && theme_file&.attached? %>
@@ -62,12 +65,11 @@
         ></div>
       </div>
 
-      <div
-        class="w-2 cursor-col-resize bg-gray-200 hover:bg-gray-300"
+      <div class="w-2 cursor-col-resize bg-gray-200 hover:bg-gray-300"
         data-split-pane-target="handle"
         data-action=<%= [
-        "mousedown->split-pane#startResize",
-        "touchstart->split-pane#startResize"
+          "mousedown->split-pane#startResize",
+          "touchstart->split-pane#startResize"
         ].join(" ") %>
       ></div>
 

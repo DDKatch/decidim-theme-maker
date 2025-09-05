@@ -19,7 +19,7 @@
       "live-css-editor-target": "globalCheckbox"
     },
     label: false,
-    value: defined?(theme_file) && theme_file&.attached? ? theme_file.global : false
+    checked: (defined?(theme_file) && theme_file.present?) ? theme_file.global : form.object.try(:global)
   %>
   <%= form.label :global, "Global (apply to all pages)", class: "ml-2" %>
 </div>
@@ -33,6 +33,12 @@
       action: "change->live-css-editor#fileSelected",
       "live-css-editor-target": "fileInput"
   } %>
+  <% if defined?(theme_file) && theme_file&.attached? %>
+    <div class="text-sm text-gray-600 mt-1">
+      <%= t("models.theme_file.fields.filename", scope: "decidim.admin") %>: <%= theme_file.filename %>
+      (<%= theme_file.file_size %>)
+    </div>
+  <% end %>
 </div>
 
 <div class="flex-col py-2 border-4 round-2 border-gray-5">

@@ -1,78 +1,83 @@
-<div class="flex-col py-2 border-4 round-2 border-gray-5">
-  <%= form.text_field :page_url,
-    class: "flex w-[50%] border border-gray-300 rounded px-1",
-    required: true,
-    data: {
-      "live-css-editor-target": "pageUrl",
-      action: [
-        "keydown.enter@window->live-css-editor#updateIframeFromUrl",
-        "mouseleave->live-css-editor#updateIframeFromUrl"
-      ].join(" ")
-    }
-  %>
-</div>
+<div class="flex flex-col gap-3">
+  <div class="p-2 border-2 rounded-md border-white bg-white">
+    <%= form.text_field :page_url,
+      class: "flex w-[50%] border border-gray-300 rounded px-1",
+      required: true,
+      data: {
+        "live-css-editor-target": "pageUrl",
+        action: [
+          "keydown.enter@window->live-css-editor#updateIframeFromUrl",
+          "mouseleave->live-css-editor#updateIframeFromUrl"
+        ].join(" ")
+      }
+    %>
+  </div>
 
-<div class="flex-col py-2 border-4 round-2 border-gray-5">
-  <%= form.check_box :global,
-    data: {
-      action: "live-css-editor#toggleGlobal",
-      "live-css-editor-target": "globalCheckbox"
-    },
-    label: false,
-    checked: (defined?(theme_file) && theme_file.present?) ? theme_file.global : form.object.try(:global)
-  %>
-  <%= form.label :global, "Global (apply to all pages)", class: "ml-2" %>
-</div>
+  <div class="p-2 border-2 rounded-md border-white bg-white">
+    <%= form.check_box :global,
+      data: {
+        action: "live-css-editor#toggleGlobal",
+        "live-css-editor-target": "globalCheckbox"
+      },
+      label: false,
+      checked: (defined?(theme_file) && theme_file.present?) ? theme_file.global : form.object.try(:global)
+    %>
+    <%= form.label :global, "Global (apply to all pages)", class: "ml-2" %>
+  </div>
 
-<div class="flex-col py-2 border-4 round-2 border-gray-5">
-  <%= form.upload(
-    :file,
-    label: t("models.theme_file.fields.file", scope: "decidim.admin") + "",
-    direct_upload: true,
-    accept: ".css,text/css",
-    data: {
-        action: "change->live-css-editor#fileSelected",
-        "live-css-editor-target": "fileInput"
-    }
-  ) %>
-</div>
+  <div class="p-2 border-2 rounded-md border-white bg-white">
+    <%= form.upload(
+      :file,
+      label: t("models.theme_file.fields.file", scope: "decidim.admin") + "",
+      direct_upload: true,
+      accept: ".css,text/css",
+      button_class: "button button__sm button__transparent-secondary",
+      html_class: "bg-white",
+      data: {
+          action: "change->live-css-editor#fileSelected",
+          "live-css-editor-target": "fileInput"
+      }
+    ) %>
+  </div>
 
-<div class="flex-col py-2 border-4 round-2 border-gray-5">
-  <div class="flex flex-row space-between gap-4">
-    <div class="w-[30%] h-full flex flex-col gap-1">
+  <div class="p-2 border-2 rounded-md border-white bg-white">
+    <div class="flex flex-row space-between gap-4">
+      <div class="w-[30%] h-full flex flex-col gap-1">
 
-      <% body_value = nil %>
-      <% if defined?(theme_file) && theme_file&.attached? %>
-        <% body_value = theme_file.file.open { |io| io.read.force_encoding("UTF-8") } %>
-      <% end %>
+        <% body_value = nil %>
+        <% if defined?(theme_file) && theme_file&.attached? %>
+          <% body_value = theme_file.file.open { |io| io.read.force_encoding("UTF-8") } %>
+        <% end %>
 
-        <%= form.text_area :body,
-          label: false,
-          rows: 30,
-          data: { "live-css-editor-target": "textarea" },
-          style: "display:none;",
-          value: body_value
-        %>
+          <%= form.text_area :body,
+            label: false,
+            data: { "live-css-editor-target": "textarea" },
+            style: "display:none;",
+            value: body_value
+          %>
 
-        <div
-          data-live-css-editor-target="editor"
-          class="w-full h-full border"
-          style="min-height: 400px;"
-        ></div>
-    </div>
-
-    <% if local_assigns[:show_preview] %>
-      <% preview_raw = (form.object.respond_to?(:page_url) ? form.object.page_url : nil) || root_url  %>
-      <% preview_url = preview_raw + (preview_raw.include?("?") ? "&" : "?") + "live_preview=1" %>
-      <div class="flex border-1 w-[70%]">
-        <iframe src="<%= preview_url %>"
-          class="w-full h-full border"
-          data-live-css-editor-target="iframe">
-        >
-        </iframe>
+          <div
+            data-live-css-editor-target="editor"
+            class="w-full h-full border"
+            style="min-height: 500px;"
+          ></div>
       </div>
-    <% end %>
+
+      <% if local_assigns[:show_preview] %>
+        <% preview_raw = (form.object.respond_to?(:page_url) ? form.object.page_url : nil) || root_url  %>
+        <% preview_url = preview_raw + (preview_raw.include?("?") ? "&" : "?") + "live_preview=1" %>
+        <div class="flex border-1 w-[70%]">
+          <iframe src="<%= preview_url %>"
+            class="w-full h-full border"
+            data-live-css-editor-target="iframe">
+          >
+          </iframe>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
+
+<div class="py-6"/>
 
 <%= append_javascript_pack_tag "decidim_admin_theme_maker" %>

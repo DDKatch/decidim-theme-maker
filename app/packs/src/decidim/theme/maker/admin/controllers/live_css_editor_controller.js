@@ -16,6 +16,7 @@ export default class extends Controller {
     this.updateIframeFromUrl = this.updateIframeFromUrl.bind(this);
     this.fileSelected = this.fileSelected.bind(this);
     this.setupAce = this.setupAce.bind(this);
+    this.handleModalFileChange = this.handleModalFileChange.bind(this);
 
     // Capture initial page URL to allow restore when toggling global off
     this.initialPageUrl = this.hasPageUrlTarget ? (this.pageUrlTarget.value || "") : "";
@@ -25,6 +26,14 @@ export default class extends Controller {
 
     // Ensure UI reflects current global state on load
     this.syncGlobalUI();
+
+    // Listen for Decidim upload modal file selections (hidden input inside modal)
+    // Use capture to catch events from hidden inputs before they are possibly stopped
+    document.addEventListener("change", this.handleModalFileChange, true);
+  }
+
+  disconnect() {
+    document.removeEventListener("change", this.handleModalFileChange, true);
   }
 
   send() {
@@ -135,6 +144,42 @@ export default class extends Controller {
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error("Failed to read selected file", e);
+    }
+  }
+
+  // Capture file selection from Decidim's upload modal (file input inside the modal)
+  handleModalFileChange(event) {
+    try {
+      const target = event.target;
+      if (!target || target.tagName !== "INPUT" || target.type !== "file") return;
+
+      // Ensure this is the Decidim upload modal input for our :file attribute
+      const dropzone = target.closest('[data-dropzone]');
+      if (!dropzone) return;
+      const attributeName = dropzone.dataset.name;
+      if (attributeName !== "file") return;
+
+      const file = target.files && target.files[0];
+      if (!file) return;
+      // Only process CSS files
+      const isCss = (file.type === "text/css") || (/\.css$/i).test(file.name || "");
+      if (!isCss) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const content = reader.result || "";
+        if (this.editor) {
+          this.editor.setValue(content, -1);
+        }
+        if (this.hasTextareaTarget) {
+          this.textareaTarget.value = content;
+        }
+        this.send();
+      };
+      reader.readAsText(file);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to handle modal file change", e);
     }
   }
 }

@@ -54,6 +54,7 @@ export default class extends Controller {
   disconnect() {
     document.removeEventListener("change", this.handleModalFileChange, true);
     this.detachResizeListeners();
+    this.enableIframePointerEvents();
   }
 
   send() {
@@ -242,6 +243,9 @@ export default class extends Controller {
     window.addEventListener("touchmove", this.onResizeMove, { passive: false });
     window.addEventListener("mouseup", this.stopResize);
     window.addEventListener("touchend", this.stopResize);
+
+    // Ensure the iframe does not swallow pointer events during drag
+    this.disableIframePointerEvents();
   }
 
   onResizeMove(event) {
@@ -274,6 +278,7 @@ export default class extends Controller {
   stopResize() {
     this.detachResizeListeners();
     this._resizeState = null;
+    this.enableIframePointerEvents();
     if (this.editor) {
       this.editor.resize();
     }
@@ -284,5 +289,27 @@ export default class extends Controller {
     window.removeEventListener("touchmove", this.onResizeMove, { passive: false });
     window.removeEventListener("mouseup", this.stopResize);
     window.removeEventListener("touchend", this.stopResize);
+  }
+
+  disableIframePointerEvents() {
+    try {
+      if (this.hasIframeTarget && this.iframeTarget) {
+        this._iframePrevPointerEvents = this.iframeTarget.style.pointerEvents;
+        this.iframeTarget.style.pointerEvents = "none";
+      }
+    } catch (_) {
+      // no-op
+    }
+  }
+
+  enableIframePointerEvents() {
+    try {
+      if (this.hasIframeTarget && this.iframeTarget) {
+        this.iframeTarget.style.pointerEvents = this._iframePrevPointerEvents || "";
+        this._iframePrevPointerEvents = null;
+      }
+    } catch (_) {
+      // no-op
+    }
   }
 }

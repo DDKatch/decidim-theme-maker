@@ -15,6 +15,7 @@
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/stimulus-webpack-helpers": "^1.0.1",
+    "ace-builds": "^1.43.3",
     "add": "^2.0.6"
   },
   "devDependencies": {

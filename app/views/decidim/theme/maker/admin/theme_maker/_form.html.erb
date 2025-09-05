@@ -43,15 +43,16 @@
         <%= form.text_area :body,
           label: false,
           rows: 30,
-          data: {
-            action: "input->live-css-editor#send",
-            "live-css-editor-target": "textarea"
-          },
-          class: "w-full h-full border p-1 pt-0",
-          spellcheck: false,
-          style: "font-family: monospace;",
+          data: { "live-css-editor-target": "textarea" },
+          style: "display:none;",
           value: body_value
         %>
+
+        <div
+          data-live-css-editor-target="editor"
+          class="w-full h-full border"
+          style="min-height: 400px;"
+        ></div>
     </div>
 
     <% if local_assigns[:show_preview] %>

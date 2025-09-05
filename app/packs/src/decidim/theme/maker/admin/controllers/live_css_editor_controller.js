@@ -1,7 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
+import "ace-builds/src-noconflict/ace";
+import "ace-builds/src-noconflict/theme-textmate";
+import "ace-builds/src-noconflict/mode-css";
 
 export default class extends Controller {
-  static targets = ["textarea", "iframe", "fileInput", "form", "pageUrl", "globalCheckbox"];
+  static targets = ["textarea", "iframe", "fileInput", "form", "pageUrl", "globalCheckbox", "editor"];
   static values = { filename: String };
 
   init() {}
@@ -12,23 +15,26 @@ export default class extends Controller {
     this.toggleGlobal = this.toggleGlobal.bind(this);
     this.updateIframeFromUrl = this.updateIframeFromUrl.bind(this);
     this.fileSelected = this.fileSelected.bind(this);
+    this.setupAce = this.setupAce.bind(this);
 
     // Capture initial page URL to allow restore when toggling global off
     this.initialPageUrl = this.hasPageUrlTarget ? (this.pageUrlTarget.value || "") : "";
 
-    this.postCSS(this.textareaTarget.value);
+    this.setupAce();
+    this.postCSS(this.textareaTarget.value || "");
 
     // Ensure UI reflects current global state on load
     this.syncGlobalUI();
   }
 
   send() {
-    this.postCSS(this.textareaTarget.value);
+    const css = this.editor ? this.editor.getValue() : (this.textareaTarget.value || "");
+    this.postCSS(css);
   }
 
   prepare(event) {
     try {
-      const css = this.textareaTarget.value || "";
+      const css = this.editor ? this.editor.getValue() : (this.textareaTarget.value || "");
       const filename = this.hasFilenameValue && this.filenameValue ? this.filenameValue : "theme.css";
       const file = new File([css], filename, { type: "text/css" });
 
@@ -41,6 +47,22 @@ export default class extends Controller {
       // eslint-disable-next-line no-console
       console.error("Failed to prepare file from textarea", e);
     }
+  }
+
+  setupAce() {
+    if (!this.hasEditorTarget) return;
+    const initial = this.textareaTarget ? (this.textareaTarget.value || "") : "";
+    this.editor = ace.edit(this.editorTarget);
+    this.editor.setTheme("ace/theme/textmate");
+    this.editor.session.setMode("ace/mode/css");
+    this.editor.setShowPrintMargin(false);
+    this.editor.session.setUseWrapMode(true);
+    this.editor.setValue(initial, -1);
+    this.editor.session.on("change", () => {
+      const val = this.editor.getValue();
+      if (this.textareaTarget) this.textareaTarget.value = val;
+      this.send();
+    });
   }
 
   toggleGlobal() {

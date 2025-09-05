@@ -35,7 +35,7 @@ en:
         theme_file:
           fields:
             page_url: "Page URL"
-            file: "CSS File"
+            file: "Current theme file"
             global: "Applied globally"
             filename: "Filename"
             file_size: "File Size"

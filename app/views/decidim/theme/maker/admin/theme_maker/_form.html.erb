@@ -25,20 +25,16 @@
 </div>
 
 <div class="flex-col py-2 border-4 round-2 border-gray-5">
-  <%= form.file_field :file,
-    label: false,
+  <%= form.upload(
+    :file,
+    label: t("models.theme_file.fields.file", scope: "decidim.admin") + "",
     direct_upload: true,
     accept: ".css,text/css",
     data: {
-      action: "change->live-css-editor#fileSelected",
-      "live-css-editor-target": "fileInput"
-  } %>
-  <% if defined?(theme_file) && theme_file&.attached? %>
-    <div class="text-sm text-gray-600 mt-1">
-      <%= t("models.theme_file.fields.filename", scope: "decidim.admin") %>: <%= theme_file.filename %>
-      (<%= theme_file.file_size %>)
-    </div>
-  <% end %>
+        action: "change->live-css-editor#fileSelected",
+        "live-css-editor-target": "fileInput"
+    }
+  ) %>
 </div>
 
 <div class="flex-col py-2 border-4 round-2 border-gray-5">

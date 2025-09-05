@@ -125,6 +125,12 @@ export default class extends Controller {
 
   updateIframeFromUrl(event) {
     if (event && typeof event.preventDefault === "function") {
+      const isKeydown = event.type === "keydown";
+      const isInsideAceEditor = isKeydown && this.hasEditorTarget && this.editorTarget.contains(event.target);
+      if (isInsideAceEditor) {
+        return;
+      }
+
       event.preventDefault();
     }
     if (!this.hasIframeTarget || !this.hasPageUrlTarget) return;

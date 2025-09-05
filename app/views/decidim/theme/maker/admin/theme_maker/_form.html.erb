@@ -1,19 +1,22 @@
 <div class="flex-col py-2 border-4 round-2 border-gray-5">
-  <%= form.text_field(
-    :page_url,
-    required: true,
+  <%= form.text_field :page_url,
     class: "flex w-[50%] border border-gray-300 rounded px-1",
+    required: true,
     data: {
       "live-css-editor-target": "pageUrl",
-      action: "keydown.enter@window->live-css-editor#updateIframeFromUrl mouseleave->live-css-editor#updateIframeFromUrl"
+      action: [
+        "keydown.enter@window->live-css-editor#updateIframeFromUrl",
+        "mouseleave->live-css-editor#updateIframeFromUrl"
+      ].join(" ")
     }
-  ) %>
+  %>
 </div>
 
 <div class="flex-col py-2 border-4 round-2 border-gray-5">
   <%= form.check_box :global,
     data: {
-      action: "live-css-editor#toggleGlobal", "live-css-editor-target": "globalCheckbox"
+      action: "live-css-editor#toggleGlobal",
+      "live-css-editor-target": "globalCheckbox"
     },
     label: false,
     value: defined?(theme_file) && theme_file&.attached? ? theme_file.global : false
@@ -27,7 +30,8 @@
     direct_upload: true,
     accept: ".css,text/css",
     data: {
-      action: "change->live-css-editor#fileSelected", "live-css-editor-target": "fileInput"
+      action: "change->live-css-editor#fileSelected",
+      "live-css-editor-target": "fileInput"
   } %>
 </div>
 

@@ -14,7 +14,15 @@ module Decidim
         validates_upload :file, uploader: Decidim::Theme::Maker::ThemeFileUploader
 
         validates :page_url, presence: true
+        # Forbid multiple non-global files for the same page within an organization
+        validates :page_url,
+                  uniqueness: { scope: :organization_id, conditions: -> { where(global: false) } },
+                  unless: :global
         attribute :global, :boolean, default: false
+        # Allow only one global file per organization
+        validates :global,
+                  uniqueness: { scope: :organization_id, conditions: -> { where(global: true) } },
+                  if: :global
 
         delegate :attached?, to: :file
 

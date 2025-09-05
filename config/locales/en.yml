@@ -40,6 +40,11 @@ en:
             filename: "Filename"
             file_size: "File Size"
             created_at: "Created At"
+          errors:
+            page_url:
+              taken: "There is already a non-global file for this page"
+            global:
+              taken: "Only one global theme file is allowed per organization"
       actions:
         title: "Actions"
         edit: "Edit"

@@ -8,11 +8,10 @@
     model: @theme_file,
     url: theme_maker_path(@theme_file),
     method: :put,
-    local: true,
     html: { multipart: true }
   } %>
 
-  <%= form_with(**form_params) do |form| %>
+  <%= decidim_form_for(@form, **form_params) do |form| %>
     <%= render partial: "form", locals: { form: form, theme_file: @theme_file, show_preview: true } %>
 
     <div style="margin-top:8px;">

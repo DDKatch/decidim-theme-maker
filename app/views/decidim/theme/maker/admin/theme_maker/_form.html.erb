@@ -41,34 +41,35 @@
   </div>
 
   <div class="p-2 border-2 rounded-md border-white bg-white">
-    <div class="flex flex-row space-between gap-4">
-      <div class="w-[30%] h-full flex flex-col gap-1">
-
+    <div class="flex flex-row space-between gap-0">
+      <div class="w-[30%] h-full flex">
         <% body_value = nil %>
         <% if defined?(theme_file) && theme_file&.attached? %>
           <% body_value = theme_file.file.open { |io| io.read.force_encoding("UTF-8") } %>
         <% end %>
 
-          <%= form.text_area :body,
-            label: false,
-            data: { "live-css-editor-target": "textarea" },
-            style: "display:none;",
-            value: body_value
-          %>
+        <%= form.text_area :body,
+          label: false,
+          data: { "live-css-editor-target": "textarea" },
+          style: "display:none;",
+          value: body_value
+        %>
 
-          <div
-            data-live-css-editor-target="editor"
-            class="w-full h-full border"
-            style="min-height: 500px;"
-          ></div>
+        <div
+          data-live-css-editor-target="editor"
+          class="w-full h-full border"
+          style="min-height: 500px;"
+        ></div>
       </div>
+
+      <div class="px-1"></div>
 
       <% if local_assigns[:show_preview] %>
         <% preview_raw = (form.object.respond_to?(:page_url) ? form.object.page_url : nil) || root_url  %>
         <% preview_url = preview_raw + (preview_raw.include?("?") ? "&" : "?") + "live_preview=1" %>
-        <div class="flex border-1 w-[70%]">
+        <div class="flex border-1 w-full h-full">
           <iframe src="<%= preview_url %>"
-            class="w-full h-full border"
+            class="w-full h-full border min-h-[500px]"
             data-live-css-editor-target="iframe">
           >
           </iframe>
@@ -78,6 +79,6 @@
   </div>
 </div>
 
-<div class="py-6"/>
+<div class="py-6"></div>
 
 <%= append_javascript_pack_tag "decidim_admin_theme_maker" %>

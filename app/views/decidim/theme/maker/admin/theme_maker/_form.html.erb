@@ -41,8 +41,8 @@
   </div>
 
   <div class="p-2 border-2 rounded-md border-white bg-white">
-    <div class="flex flex-row space-between gap-0">
-      <div class="w-[30%] h-full flex">
+    <div class="flex flex-row space-between gap-0" data-live-css-editor-target="container">
+      <div class="w-[30%] h-full flex" data-live-css-editor-target="leftPane">
         <% body_value = nil %>
         <% if defined?(theme_file) && theme_file&.attached? %>
           <% body_value = theme_file.file.open { |io| io.read.force_encoding("UTF-8") } %>
@@ -62,12 +62,22 @@
         ></div>
       </div>
 
-      <div class="px-1"></div>
+      <div
+        class="w-2 cursor-col-resize bg-gray-200 hover:bg-gray-300"
+        data-live-css-editor-target="handle"
+        data-action=<%= [
+        "mousedown->live-css-editor#startResize",
+        "touchstart->live-css-editor#startResize"
+        ].join(" ") %>
+      ></div>
 
       <% if local_assigns[:show_preview] %>
         <% preview_raw = (form.object.respond_to?(:page_url) ? form.object.page_url : nil) || root_url  %>
         <% preview_url = preview_raw + (preview_raw.include?("?") ? "&" : "?") + "live_preview=1" %>
-        <div class="flex border-1 w-full h-full">
+        <div class="flex border-1 w-full h-full"
+          data-live-css-editor-target="rightPane"
+          style="flex: 1 1 auto; width: auto;"
+        >
           <iframe src="<%= preview_url %>"
             class="w-full h-full border min-h-[500px]"
             data-live-css-editor-target="iframe">

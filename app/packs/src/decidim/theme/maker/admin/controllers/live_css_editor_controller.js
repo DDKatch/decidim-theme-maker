@@ -26,6 +26,7 @@ export default class extends Controller {
     this.setupAce = this.setupAce.bind(this);
     this.handleModalFileChange = this.handleModalFileChange.bind(this);
     this.onSplitPaneMove = this.onSplitPaneMove.bind(this);
+    this.clearExistingUploads = this.clearExistingUploads.bind(this);
 
     // Capture initial page URL to allow restore when toggling global off
     this.initialPageUrl = this.hasPageUrlTarget ? (this.pageUrlTarget.value || "") : "";
@@ -62,9 +63,13 @@ export default class extends Controller {
       const filename = this.hasFilenameValue && this.filenameValue ? this.filenameValue : "theme.css";
       const file = new File([css], filename, { type: "text/css" });
 
+      // Ensure only one file is submitted by clearing previous signed_id inputs and previews
+      this.clearExistingUploads();
+
       // Build a DataTransfer to assign a File to a hidden file input
       const dt = new DataTransfer();
       dt.items.add(file);
+      if (this.fileInputTarget) this.fileInputTarget.value = "";
       this.fileInputTarget.files = dt.files;
     } catch (e) {
       // If anything goes wrong, avoid blocking submit
@@ -153,13 +158,20 @@ export default class extends Controller {
         if (this.hasTextareaTarget) this.textareaTarget.value = "";
         return;
       }
+      // Keep only the newest selection
+      this.clearExistingUploads();
+
       const reader = new FileReader();
       reader.onload = () => {
-        if (this.hasTextareaTarget) {
-          this.textareaTarget.value = reader.result || "";
-          // Optionally update live preview if available
-          this.send();
+        const content = reader.result || "";
+        if (this.editor) {
+          this.editor.setValue(content, -1);
         }
+        if (this.hasTextareaTarget) {
+          this.textareaTarget.value = content;
+        }
+        // Update live preview with the newly loaded content
+        this.send();
       };
       reader.readAsText(file);
     } catch (e) {
@@ -179,6 +191,9 @@ export default class extends Controller {
       if (!dropzone) return;
       const attributeName = dropzone.dataset.name;
       if (attributeName !== "file") return;
+
+      // Remove previous uploaded entries for :file to avoid duplicates
+      this.clearExistingUploads();
 
       const file = target.files && target.files[0];
       if (!file) return;
@@ -207,6 +222,36 @@ export default class extends Controller {
   onSplitPaneMove() {
     if (this.editor) {
       this.editor.resize();
+    }
+  }
+
+  // Remove previously attached hidden inputs (ActiveStorage signed_id) and visible previews
+  clearExistingUploads() {
+    try {
+      const form = (this.fileInputTarget && this.fileInputTarget.closest("form")) || this.element.closest("form") || document.querySelector("form");
+      if (!form) return;
+
+      const inputName = this.fileInputTarget ? this.fileInputTarget.getAttribute("name") : null;
+      const selectors = inputName
+        ? [
+            `input[type="hidden"][name="${inputName}"]`,
+            `input[type="hidden"][name="${inputName}[]"]`
+          ]
+        : [
+            'input[type="hidden"][name$="[file]"]',
+            'input[type="hidden"][name$="[file][]"]'
+          ];
+
+      form.querySelectorAll(selectors.join(",")).forEach((el) => el.remove());
+
+      // Best-effort: clear previews inside the dropzone for this attribute
+      const dz = form.querySelector('[data-dropzone][data-name="file"]');
+      if (dz) {
+        dz.querySelectorAll('.dz-preview, [data-upload-preview], .upload-item, .uploader__file').forEach((el) => el.remove());
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn("Failed to clear existing uploads", e);
     }
   }
 }

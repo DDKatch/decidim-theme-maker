@@ -1,7 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
-import "ace-builds/src-noconflict/ace";
-import "ace-builds/src-noconflict/theme-textmate";
-import "ace-builds/src-noconflict/mode-css";
+import ace from "ace-builds/src-noconflict/ace.js";
+import "ace-builds/src-noconflict/theme-textmate.js";
+import "ace-builds/src-noconflict/mode-css.js";
+import "ace-builds/webpack-resolver";
 
 export default class extends Controller {
   static targets = [

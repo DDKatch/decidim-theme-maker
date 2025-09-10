@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    decidim-theme-maker (0.2.0)
+    decidim-theme-maker (0.3.2)
       decidim-admin (>= 0.30, < 0.31)
       decidim-api (>= 0.30, < 0.31)
       decidim-core (>= 0.30, < 0.31)
